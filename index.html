@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GWAZU — Create, Dominate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --off-black: #111111;
+    --dark: #1a1a1a;
+    --grey: #2a2a2a;
+    --mid: #555;
+    --light: #aaa;
+    --white: #f5f5f5;
+    --accent: #ffffff;
+    --football: #00c9a7;
+    --rugby: #e63946;
+    --vests: #4a90d9;
+    --apparel: #c8c8c8;
+    --gold: #f0b429;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(8,8,8,0.97); border-bottom: 1px solid #222; }
+
+  .nav-logo { display: flex; align-items: center; text-decoration: none; }
+  .nav-logo img { height: 48px; width: auto; display: block; }
+
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--light); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--black); background: var(--white);
+    padding: 10px 24px; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 0 60px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: var(--black); overflow: hidden;
+  }
+  .hero-bg-img {
+    position: absolute; inset: 0;
+    background-image: url('-adb0hl.jpg');
+    background-size: cover; background-position: center top;
+    opacity: 0.12;
+    filter: grayscale(1);
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute; top: -20%; right: -10%;
+    width: 60vw; height: 120vh;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.02) 100%);
+    transform: skewX(-15deg);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+  }
+
+  .geo-line {
+    position: absolute; background: rgba(255,255,255,0.04);
+    transform-origin: left center;
+  }
+  .geo-line-1 { top: 20%; left: 0; right: 0; height: 1px; transform: rotate(-8deg); }
+  .geo-line-2 { top: 50%; left: 0; right: 0; height: 1px; transform: rotate(-8deg); }
+  .geo-line-3 { top: 80%; left: 0; right: 0; height: 1px; transform: rotate(-8deg); }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 6px;
+    text-transform: uppercase; color: var(--mid);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--mid);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 12vw, 160px);
+    line-height: 0.9; letter-spacing: 2px; color: var(--white);
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-title .line-accent {
+    -webkit-text-stroke: 1px rgba(255,255,255,0.3); color: transparent;
+  }
+
+  .hero-tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: 8px;
+    text-transform: uppercase; color: var(--light);
+    margin-top: 24px; animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-desc {
+    font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--mid);
+    margin-top: 32px; max-width: 420px; animation: fadeUp 0.8s 0.35s ease both;
+  }
+
+  .hero-buttons {
+    display: flex; gap: 16px; margin-top: 40px;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--black); background: var(--white);
+    padding: 14px 32px; text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+
+  .btn-ghost {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 14px 32px; text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+
+  .hero-right {
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 1s 0.3s ease both;
+  }
+
+  .hero-photo-stack {
+    position: relative; width: 100%; max-width: 360px; height: 480px;
+  }
+  .hero-photo-stack .photo-card {
+    position: absolute;
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .hero-photo-stack .photo-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(0.3);
+  }
+  .photo-card-1 {
+    width: 220px; height: 300px;
+    top: 0; left: 20px;
+    transform: rotate(-3deg);
+  }
+  .photo-card-2 {
+    width: 200px; height: 260px;
+    bottom: 0; right: 0;
+    transform: rotate(2deg);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .photo-card-1::after, .photo-card-2::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.5) 0%, transparent 60%);
+  }
+
+  .hero-stats {
+    position: absolute; bottom: 50px; left: 60px; right: 60px;
+    display: flex; gap: 60px;
+    animation: fadeUp 0.8s 0.7s ease both;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 30px;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: var(--white); line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--mid); margin-top: 4px;
+  }
+
+  /* ── ACTION STRIP ── */
+  .action-strip {
+    position: relative; width: 100%; height: 320px; overflow: hidden;
+  }
+  .action-strip img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+    display: block; filter: brightness(0.55);
+  }
+  .action-strip-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 60px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+  }
+  .action-strip-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 6px;
+    text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  }
+  .action-strip-label::before {
+    content: ''; display: block; width: 30px; height: 1px; background: var(--accent);
+  }
+  .action-strip-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 100px); line-height: 0.9;
+    color: var(--white); letter-spacing: 2px;
+  }
+
+  /* ── SECTIONS SHARED ── */
+  section { padding: 120px 60px; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 6px;
+    text-transform: uppercase; color: var(--mid);
+    display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 30px; height: 1px; background: var(--mid);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px); line-height: 0.95; color: var(--white);
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--off-black); position: relative; overflow: hidden; }
+
+  .about-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start;
+  }
+
+  .about-body {
+    font-size: 15px; font-weight: 300; line-height: 1.9; color: var(--light); margin-top: 40px;
+  }
+  .about-body strong { color: var(--white); font-weight: 500; }
+
+  .about-quote {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 2px; color: var(--white);
+    border-left: 3px solid var(--white); padding-left: 24px;
+    margin-top: 48px; line-height: 1.4;
+  }
+
+  .about-pillars { display: flex; flex-direction: column; gap: 1px; margin-top: 60px; }
+
+  .pillar {
+    padding: 28px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex; gap: 24px; align-items: flex-start;
+  }
+  .pillar-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 3px;
+    color: var(--mid); padding-top: 4px; min-width: 30px;
+  }
+  .pillar-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--white); margin-bottom: 8px;
+  }
+  .pillar-desc { font-size: 14px; font-weight: 300; line-height: 1.7; color: var(--mid); }
+
+  .about-history {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    padding: 32px; margin-top: 40px;
+  }
+  .history-year {
+    font-family: 'Bebas Neue', sans-serif; font-size: 72px;
+    color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: -10px;
+  }
+  .history-text { font-size: 14px; font-weight: 300; line-height: 1.8; color: var(--light); }
+
+  /* ── TEAM PHOTO STRIP (in About) ── */
+  .team-photo-strip {
+    display: flex; gap: 12px; margin-top: 48px; overflow: hidden;
+  }
+  .team-photo-strip .tps-item {
+    flex: 1; min-width: 0; aspect-ratio: 3/4; overflow: hidden;
+    position: relative;
+  }
+  .team-photo-strip .tps-item img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top;
+    filter: grayscale(1) contrast(1.1);
+    transition: filter 0.4s, transform 0.4s;
+  }
+  .team-photo-strip .tps-item:hover img {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.04);
+  }
+
+  /* ── WORK / GALLERY ── */
+  #work {
+    background: var(--black);
+    padding: 120px 60px;
+  }
+
+  .work-inner { max-width: 1200px; margin: 0 auto; }
+
+  .work-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 56px;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 12px;
+  }
+
+  .work-cell {
+    position: relative; overflow: hidden; cursor: pointer;
+    background: var(--grey);
+  }
+  .work-cell img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease, filter 0.4s ease;
+    display: block;
+  }
+  .work-cell:hover img { transform: scale(1.05); filter: brightness(0.7); }
+
+  .work-cell-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 55%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 20px;
+  }
+  .work-cell:hover .work-cell-overlay { opacity: 1; }
+
+  .work-cell-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--white);
+  }
+
+  /* Grid layout assignments */
+  .wc-1 { grid-column: 1 / 6; grid-row: 1; height: 380px; }
+  .wc-2 { grid-column: 6 / 9; grid-row: 1; height: 380px; }
+  .wc-3 { grid-column: 9 / 13; grid-row: 1; height: 380px; }
+  .wc-4 { grid-column: 1 / 5; grid-row: 2; height: 320px; }
+  .wc-5 { grid-column: 5 / 9; grid-row: 2; height: 320px; }
+  .wc-6 { grid-column: 9 / 13; grid-row: 2; height: 320px; }
+  .wc-7 { grid-column: 1 / 4; grid-row: 3; height: 300px; }
+  .wc-8 { grid-column: 4 / 8; grid-row: 3; height: 300px; }
+  .wc-9 { grid-column: 8 / 13; grid-row: 3; height: 300px; }
+
+  /* ── CLIENTELE ── */
+  #clientele {
+    background: var(--off-black);
+    padding: 100px 60px;
+  }
+  .clientele-inner { max-width: 1200px; margin: 0 auto; }
+  .clientele-header { margin-bottom: 48px; }
+
+  .clientele-img-wrap {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    overflow: hidden;
+    padding: 40px;
+  }
+  .clientele-img-wrap img {
+    width: 100%; display: block;
+  }
+
+  /* ── PRODUCTS ── */
+  #products { background: var(--black); }
+
+  .products-inner { max-width: 1200px; margin: 0 auto; }
+
+  .products-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  /* Category selector — redesigned as large visual cards */
+  .cat-nav {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 60px;
+  }
+
+  .cat-card {
+    position: relative; overflow: hidden; cursor: pointer;
+    height: 200px; border: 2px solid transparent;
+    transition: border-color 0.25s;
+    background: var(--grey);
+  }
+  .cat-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.4s, filter 0.4s;
+    filter: brightness(0.45) grayscale(0.3);
+  }
+  .cat-card:hover img, .cat-card.active img {
+    transform: scale(1.06); filter: brightness(0.6) grayscale(0);
+  }
+  .cat-card.active { border-color: var(--white); }
+
+  .cat-card-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(8,8,8,0.8) 0%, transparent 60%);
+  }
+  .cat-card-emoji {
+    font-size: 22px; margin-bottom: 8px;
+  }
+  .cat-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 3px; color: var(--white);
+    line-height: 1;
+  }
+  .cat-card-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+  .cat-card-active-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--white); transform: scaleX(0);
+    transition: transform 0.25s; transform-origin: left;
+  }
+  .cat-card.active .cat-card-active-bar { transform: scaleX(1); }
+  .cat-card[data-cat="football"] .cat-card-active-bar { background: var(--football); }
+  .cat-card[data-cat="rugby"] .cat-card-active-bar { background: var(--rugby); }
+  .cat-card[data-cat="vests"] .cat-card-active-bar { background: var(--vests); }
+  .cat-card[data-cat="apparel"] .cat-card-active-bar { background: var(--apparel); }
+
+  /* Tab Panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Product showcase strip */
+  .product-showcase {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 48px;
+  }
+  .showcase-card {
+    position: relative; overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--grey);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .showcase-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .showcase-card:hover img { transform: scale(1.04); }
+  .showcase-card-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(to top, rgba(8,8,8,0.9) 0%, transparent 100%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.6);
+  }
+
+  /* Options bar */
+  .product-options {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 32px; margin-bottom: 32px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;
+  }
+  .option-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .option-label.football { color: var(--football); }
+  .option-label.rugby { color: var(--rugby); }
+  .option-label.vests { color: var(--vests); }
+  .option-label.apparel { color: var(--apparel); }
+  .option-value { font-size: 13px; font-weight: 300; color: var(--light); line-height: 1.6; }
+
+  /* Price Table */
+  .price-table { width: 100%; border-collapse: collapse; }
+  .price-table thead tr { border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .price-table th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--mid); padding: 0 0 16px; text-align: left;
+  }
+  .price-table th:not(:first-child) { text-align: right; }
+  .price-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s;
+  }
+  .price-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+  .price-table td { padding: 20px 0; font-size: 14px; font-weight: 300; color: var(--light); vertical-align: top; }
+  .price-table td:not(:first-child) { text-align: right; }
+
+  .item-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--white); display: block; margin-bottom: 2px;
+  }
+  .item-desc { font-size: 12px; font-weight: 300; color: var(--mid); }
+
+  .price-val { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 600; color: var(--white); }
+  .price-na { color: var(--grey); font-size: 14px; }
+
+  .extras-strip {
+    margin-top: 32px; padding: 20px 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 40px; flex-wrap: wrap;
+    background: rgba(255,255,255,0.02);
+  }
+  .extra-item { font-size: 13px; font-weight: 300; color: var(--mid); }
+  .extra-item strong { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--light); }
+  .extra-price { color: var(--white); font-weight: 500; }
+
+  .currency-note { font-size: 12px; font-weight: 300; color: var(--mid); margin-top: 16px; }
+
+  /* ── ORDER ── */
+  #order { background: var(--off-black); position: relative; overflow: hidden; }
+
+  .order-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+
+  .order-desc { font-size: 15px; font-weight: 300; line-height: 1.9; color: var(--light); margin-top: 32px; max-width: 440px; }
+
+  .order-perks { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+  .perk { display: flex; gap: 16px; align-items: flex-start; font-size: 14px; font-weight: 300; color: var(--light); line-height: 1.6; }
+  .perk-icon { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--black); background: var(--white); padding: 3px 8px; flex-shrink: 0; margin-top: 1px; }
+
+  .order-cards { display: flex; flex-direction: column; gap: 16px; margin-top: 60px; }
+  .order-card {
+    display: flex; gap: 20px; align-items: center;
+    padding: 24px 28px;
+    border: 1px solid rgba(255,255,255,0.07);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    background: rgba(255,255,255,0.02);
+  }
+  .order-card:hover { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.05); transform: translateX(4px); }
+  .order-card-icon { font-size: 28px; flex-shrink: 0; }
+  .order-card-body { flex: 1; }
+  .order-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
+  .order-card-sub { font-size: 13px; font-weight: 300; color: var(--mid); }
+  .order-card-arrow { font-size: 18px; color: var(--mid); transition: color 0.2s; }
+  .order-card:hover .order-card-arrow { color: var(--white); }
+
+  .team-contacts { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 32px; }
+  .team-title { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--mid); margin-bottom: 24px; }
+  .team-member { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .member-role { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 4px; }
+  .member-name { font-size: 15px; font-weight: 400; color: var(--white); }
+  .member-phone { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 1px; color: var(--light); text-decoration: none; }
+  .member-phone:hover { color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--black); border-top: 1px solid rgba(255,255,255,0.07); padding: 60px; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 6px; color: rgba(255,255,255,0.15); }
+  .footer-tagline { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 6px; text-transform: uppercase; color: var(--mid); margin-top: 6px; }
+  .footer-socials { display: flex; gap: 24px; }
+  .footer-social { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.2s; }
+  .footer-social:hover { color: var(--white); }
+  .footer-copy { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.2); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .diag-accent {
+    position: absolute; top: 0; right: 0; width: 40%; height: 100%;
+    background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.012) 100%);
+    pointer-events: none;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px; }
+    .hero-content { grid-template-columns: 1fr; gap: 0; }
+    .hero-right { display: none; }
+    .hero-stats { left: 24px; right: 24px; gap: 32px; flex-wrap: wrap; }
+    .about-inner { grid-template-columns: 1fr; gap: 48px; }
+    .order-inner { grid-template-columns: 1fr; gap: 48px; }
+    .footer-inner { flex-direction: column; gap: 32px; text-align: center; }
+    .cat-nav { grid-template-columns: repeat(2, 1fr); }
+    .work-grid { grid-template-columns: 1fr 1fr; }
+    .wc-1, .wc-2, .wc-3, .wc-4, .wc-5, .wc-6, .wc-7, .wc-8, .wc-9 {
+      grid-column: auto; grid-row: auto; height: 200px;
+    }
+    .product-showcase { grid-template-columns: 1fr 1fr; }
+    .products-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    footer { padding: 40px 24px; }
+    #work, #clientele { padding: 80px 24px; }
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: #333; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <img src="Gwazu_Logo_1.png" alt="GWAZU" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#order">Order</a></li>
+  </ul>
+  <a href="#order" class="nav-cta">Order Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-img"></div>
+    <div class="geo-line geo-line-1"></div>
+    <div class="geo-line geo-line-2"></div>
+    <div class="geo-line geo-line-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Kampala, Uganda — Est. 2017</div>
+      <h1 class="hero-title">
+        CREATE<br>
+        <span class="line-accent">DOMI</span>NATE
+      </h1>
+      <div class="hero-tagline">African Sportswear &amp; Apparel</div>
+      <p class="hero-desc">
+        Born in the suburbs of Kampala. Built for athletes, teams, and fashion lovers across Africa. GWAZU crafts performance sportswear with cultural identity at its core.
+      </p>
+      <div class="hero-buttons">
+        <a href="#work" class="btn-primary">View Our Work</a>
+        <a href="#order" class="btn-ghost">Order a Kit</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-photo-stack">
+        <div class="photo-card photo-card-1">
+          <img src="IMG-20241118-WA0023.jpg" alt="GWAZU Uganda Kit"/>
+        </div>
+        <div class="photo-card photo-card-2">
+          <img src="HL7A4121.jpg" alt="GWAZU Rugby Player"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">2017</div>
+      <div class="stat-label">Founded</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">14</div>
+      <div class="stat-label">Day Turnaround</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Min. Order</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Sport Categories</div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTION STRIP -->
+<div class="action-strip">
+  <img src="20250718_211240.jpg" alt="GWAZU team in action" />
+  <div class="action-strip-overlay">
+    <div class="action-strip-label">Worn on the pitch</div>
+    <div class="action-strip-text">BUILT FOR<br>CHAMPIONS</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="diag-accent"></div>
+  <div class="about-inner">
+    <div class="about-left reveal">
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-title">MORE THAN<br>A BRAND</h2>
+      <div class="about-body">
+        <p><strong>GWAZU</strong> is a movement. Born from a collective of childhood friends in Kampala's urban suburbs, GWAZU was created as a way to turn creativity into value.</p>
+        <br>
+        <p>The name comes from <strong><em>gwas</em></strong> — Kampala slang for "homes" — a tribute to the countless hours spent at each other's places, brainstorming ideas, refining concepts, and fueling a passion for creativity and entrepreneurship.</p>
+        <br>
+        <p>Since 2017, we've grown from a group of dreamers into a full-fledged fashion and sportswear agency, offering locally made apparel that meets the professional standards of national leagues.</p>
+      </div>
+      <div class="about-quote">
+        "If you don't wear GWAZU to sweat, you wear it to relax — and look good doing both."
+      </div>
+      <div class="about-history">
+        <div class="history-year">2017</div>
+        <p class="history-text">Operating as a collective since 2017, officially registered in 2022. The founding members have known each other since 2005, bound by a shared vision of captivating audiences through creativity, innovation, and style.</p>
+      </div>
+
+      <!-- Team photo strip -->
+      <div class="team-photo-strip" style="margin-top: 40px;">
+        <div class="tps-item">
+          <img src="IMG-20241118-WA0025.jpg" alt="GWAZU Uganda Kit – Close-up"/>
+        </div>
+        <div class="tps-item">
+          <img src="HL7A5153.jpg" alt="GWAZU Team Event"/>
+        </div>
+        <div class="tps-item">
+          <img src="IMG-20241111-WA0132.jpg" alt="GWAZU Community Event"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-right reveal">
+      <div class="section-label">What Sets Us Apart</div>
+      <h2 class="section-title" style="font-size: clamp(36px, 4vw, 60px);">OUR<br>EDGE</h2>
+      <div class="about-pillars">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div class="pillar-content">
+            <div class="pillar-title">Affordability Without Compromise</div>
+            <div class="pillar-desc">High-quality products at prices that make sense for local teams and athletes across Uganda.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div class="pillar-content">
+            <div class="pillar-title">Personalized Design</div>
+            <div class="pillar-desc">Every jersey, kit, or piece of apparel is created with your identity in mind — aesthetics meets functionality.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div class="pillar-content">
+            <div class="pillar-title">Unmatched Speed</div>
+            <div class="pillar-desc">14 business days for branded sportswear. 1–10 days for apparel. Nearly double the speed of competitors.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">04</div>
+          <div class="pillar-content">
+            <div class="pillar-title">No Minimum Order</div>
+            <div class="pillar-desc">Whether you need a single piece or an entire team's kit — we produce it.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">05</div>
+          <div class="pillar-content">
+            <div class="pillar-title">Free Citywide Delivery</div>
+            <div class="pillar-desc">Every full-price order within the Greater Kampala Metropolitan Area comes with free delivery.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logo close-up photos -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:40px;">
+        <div style="overflow:hidden; aspect-ratio:1; border: 1px solid rgba(255,255,255,0.08);">
+          <img src="Gwazu_Logo_1.png" alt="GWAZU Logo" style="width:100%;height:100%;object-fit:cover;filter:grayscale(0.2);transition:transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+        </div>
+        <div style="overflow:hidden; aspect-ratio:1; border: 1px solid rgba(255,255,255,0.08);">
+          <img src="20231125_165459.jpg" alt="GWAZU on blue" style="width:100%;height:100%;object-fit:cover;filter:grayscale(0.2);transition:transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK / GALLERY -->
+<section id="work">
+  <div class="work-inner">
+    <div class="work-header reveal">
+      <div>
+        <div class="section-label">Portfolio</div>
+        <h2 class="section-title">OUR<br>WORK</h2>
+      </div>
+      <div style="font-size:13px; font-weight:300; color: var(--mid); max-width:280px; text-align:right; line-height:1.7;">
+        Kits worn on fields, courts, and screens across Uganda and beyond.
+      </div>
+    </div>
+
+    <div class="work-grid reveal">
+      <div class="work-cell wc-1">
+        <img src="IMG-20241118-WA0021.jpg" alt="GWAZU Uganda Kit Promo"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Uganda · National Kit</span></div>
+      </div>
+      <div class="work-cell wc-2">
+        <img src="HL7A4121.jpg" alt="GWAZU Rugby Player Action"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Rugby Legends Uganda</span></div>
+      </div>
+      <div class="work-cell wc-3">
+        <img src="GRANDEZA_SK7_ad.png" alt="Grandeza CF – Champion Mode"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Grandeza CF · Champion Mode</span></div>
+      </div>
+      <div class="work-cell wc-4">
+        <img src="koryom2.png" alt="Koryom FC – Grasshoppers"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Koryom FC · Grasshoppers</span></div>
+      </div>
+      <div class="work-cell wc-5">
+        <img src="Polo_neck_full_kit4.png" alt="Charlie's Shooters 17 Dark Kit"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Charlie's Shooters 17</span></div>
+      </div>
+      <div class="work-cell wc-6">
+        <img src="CREATE_YOUR_IDENTITY_2.png" alt="Create Your Identity campaign"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Create Your Identity</span></div>
+      </div>
+      <div class="work-cell wc-7">
+        <img src="Red_special_UG-2.png" alt="Uganda Red Special Kit"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Uganda · Red Special Kit</span></div>
+      </div>
+      <div class="work-cell wc-8">
+        <img src="KYUad.png" alt="Kyambogo University Rugby"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">Kyambogo University Rugby</span></div>
+      </div>
+      <div class="work-cell wc-9">
+        <img src="VURSK1homead.png" alt="VU Sharks – Home Kit"/>
+        <div class="work-cell-overlay"><span class="work-cell-label">VU Sharks · Home Kit</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTELE -->
+<section id="clientele">
+  <div class="clientele-inner">
+    <div class="clientele-header reveal">
+      <div class="section-label">Partners</div>
+      <h2 class="section-title">OUR<br>CLIENTELE</h2>
+    </div>
+    <div class="clientele-img-wrap reveal">
+      <img src="Clientele_8_4_25.png" alt="GWAZU Clientele — Teams and clubs we've kitted out"/>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-inner">
+    <div class="products-header reveal">
+      <div>
+        <div class="section-label">Catalogue</div>
+        <h2 class="section-title">OUR<br>PRODUCTS</h2>
+      </div>
+      <div style="font-size:13px; font-weight:300; color: var(--mid); max-width:280px; text-align:right; line-height:1.7;">
+        All prices in Ugandan Shillings (UGX).<br>Updated April 2025.
+      </div>
+    </div>
+
+    <!-- Visual category selector -->
+    <div class="cat-nav reveal">
+      <div class="cat-card active" data-cat="football" onclick="switchCat('football')">
+        <img src="GRANDEZA_SK7.png" alt="Football kits"/>
+        <div class="cat-card-inner">
+          <div class="cat-card-emoji">⚽</div>
+          <div class="cat-card-name">Football</div>
+          <div class="cat-card-sub">From 50,000 UGX</div>
+        </div>
+        <div class="cat-card-active-bar"></div>
+      </div>
+      <div class="cat-card" data-cat="rugby" onclick="switchCat('rugby')">
+        <img src="KYUad-1.png" alt="Rugby kits"/>
+        <div class="cat-card-inner">
+          <div class="cat-card-emoji">🏉</div>
+          <div class="cat-card-name">Rugby</div>
+          <div class="cat-card-sub">From 65,000 UGX</div>
+        </div>
+        <div class="cat-card-active-bar"></div>
+      </div>
+      <div class="cat-card" data-cat="vests" onclick="switchCat('vests')">
+        <img src="SMACKVEST_SK1F.png" alt="Vests and training"/>
+        <div class="cat-card-inner">
+          <div class="cat-card-emoji">🏃</div>
+          <div class="cat-card-name">Vests</div>
+          <div class="cat-card-sub">From 35,000 UGX</div>
+        </div>
+        <div class="cat-card-active-bar"></div>
+      </div>
+      <div class="cat-card" data-cat="apparel" onclick="switchCat('apparel')">
+        <img src="IMG-20241118-WA0023.jpg" alt="GWAZU Apparel"/>
+        <div class="cat-card-inner">
+          <div class="cat-card-emoji">👕</div>
+          <div class="cat-card-name">Apparel</div>
+          <div class="cat-card-sub">From 20,000 UGX</div>
+        </div>
+        <div class="cat-card-active-bar"></div>
+      </div>
+    </div>
+
+    <!-- FOOTBALL -->
+    <div class="tab-panel active" id="tab-football">
+      <div class="product-showcase">
+        <div class="showcase-card">
+          <img src="ug3__1_.png" alt="Uganda Tribal Red Kit"/>
+          <div class="showcase-card-label">Custom Football Kit</div>
+        </div>
+        <div class="showcase-card">
+          <img src="Polo_neck_full_kit4.png" alt="Charlie's Shooters 17 Kit"/>
+          <div class="showcase-card-label">National Level Design</div>
+        </div>
+        <div class="showcase-card">
+          <img src="ug4.png" alt="Uganda Tribal White Kit"/>
+          <div class="showcase-card-label">On-Pitch Performance</div>
+        </div>
+      </div>
+
+      <div class="product-options">
+        <div class="option-group">
+          <div class="option-label football">Collars</div>
+          <div class="option-value">Round, Y-Neck, V-Neck, W-Neck, Polo, Half Polo</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label football">Sleeve Styles</div>
+          <div class="option-value">Classic, Raglan, Long sleeves (+5,000)</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label football">Materials</div>
+          <div class="option-value">Soft Rice, Soft Derrick</div>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>S – XL</th>
+            <th>2XL – 4XL</th>
+            <th>XS – SL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="item-name">Football Jersey Regular Shirt</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">45,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Football Jersey Regular Short</span></td>
+            <td><span class="price-val">30,000</span></td>
+            <td><span class="price-val">35,000</span></td>
+            <td><span class="price-val">25,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Football Jersey Regular Kit</span><span class="item-desc">A shirt and a pair of shorts</span></td>
+            <td><span class="price-val">75,000</span></td>
+            <td><span class="price-val">80,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Football Jersey Fan Replica</span><span class="item-desc">Available after purchasing 11 kits</span></td>
+            <td><span class="price-val">45,000</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">40,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Football Stockings</span><span class="item-desc">One pair of stockings</span></td>
+            <td><span class="price-val">10,000</span></td>
+            <td><span class="price-na">—</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Football Jersey Deluxe Kit</span><span class="item-desc">A shirt, a pair of shorts and a pair of socks</span></td>
+            <td><span class="price-val">80,000</span></td>
+            <td><span class="price-val">85,000</span></td>
+            <td><span class="price-val">75,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Referee Kit</span><span class="item-desc">A pocketed shirt and a pocketed pair of shorts</span></td>
+            <td><span class="price-val">80,000</span></td>
+            <td><span class="price-val">90,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="extras-strip">
+        <div class="extra-item"><strong>Embroidered Logo</strong> <span class="extra-price">+5,000</span> per jersey</div>
+        <div class="extra-item"><strong>DTF Logo</strong> <span class="extra-price">+10,000</span> per jersey</div>
+        <div class="extra-item"><strong>Vinyl Lettering</strong> <span class="extra-price">+15,000</span> per jersey</div>
+      </div>
+      <p class="currency-note">All prices in Ugandan Shillings (UGX)</p>
+    </div>
+
+    <!-- RUGBY -->
+    <div class="tab-panel" id="tab-rugby">
+      <div class="product-showcase">
+        <div class="showcase-card">
+          <img src="VURSK1awayad.png" alt="VU Sharks Away Kit"/>
+          <div class="showcase-card-label">Smack Eagles Kit</div>
+        </div>
+        <div class="showcase-card">
+          <img src="GbtPAKvXUA0jPFj.jpeg" alt="Rugby Legends Uganda"/>
+          <div class="showcase-card-label">Match-Ready Quality</div>
+        </div>
+        <div class="showcase-card">
+          <img src="SMACK_SK3B.png" alt="Smack Rugby Jersey"/>
+          <div class="showcase-card-label">Precision Branding</div>
+        </div>
+      </div>
+
+      <div class="product-options">
+        <div class="option-group">
+          <div class="option-label rugby">Collars</div>
+          <div class="option-value">Round, Y-Neck, V-Neck, W-Neck, Polo, Half Polo</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label rugby">Sleeve Styles</div>
+          <div class="option-value">Classic, Raglan, Long sleeves (+5,000)</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label rugby">Materials</div>
+          <div class="option-value">Soft Rice, Hard Rice, Soft Derrick, Hard Derrick</div>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>S – XL</th>
+            <th>2XL – 4XL</th>
+            <th>XS – SL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="item-name">Rugby Jersey Regular Shirt</span></td>
+            <td><span class="price-val">65,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+            <td><span class="price-val">50,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Rugby Jersey Regular Short</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">35,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Rugby Jersey Regular Kit</span><span class="item-desc">A shirt and a pair of shorts</span></td>
+            <td><span class="price-val">110,000</span></td>
+            <td><span class="price-val">120,000</span></td>
+            <td><span class="price-val">90,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Rugby Jersey Fan Replica</span><span class="item-desc">Available after purchasing 15 kits</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">45,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Rugby Stockings</span><span class="item-desc">One pair of stockings</span></td>
+            <td><span class="price-val">12,000</span></td>
+            <td><span class="price-na">—</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Rugby Jersey Deluxe Kit</span><span class="item-desc">A shirt, a pair of shorts and a pair of socks</span></td>
+            <td><span class="price-val">120,000</span></td>
+            <td><span class="price-val">125,000</span></td>
+            <td><span class="price-val">100,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Referee Kit</span><span class="item-desc">A pocketed shirt and a pocketed pair of shorts</span></td>
+            <td><span class="price-val">80,000</span></td>
+            <td><span class="price-val">90,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="extras-strip">
+        <div class="extra-item"><strong>Embroidered Logo</strong> <span class="extra-price">+5,000</span> per jersey</div>
+        <div class="extra-item"><strong>DTF Logo</strong> <span class="extra-price">+10,000</span> per jersey</div>
+        <div class="extra-item"><strong>Vinyl Lettering</strong> <span class="extra-price">+15,000</span> per jersey</div>
+      </div>
+      <p class="currency-note">All prices in Ugandan Shillings (UGX)</p>
+    </div>
+
+    <!-- VESTS -->
+    <div class="tab-panel" id="tab-vests">
+      <div class="product-showcase">
+        <div class="showcase-card">
+          <img src="VUSSK4.png" alt="VU Sharks Vest"/>
+          <div class="showcase-card-label">Training Vests</div>
+        </div>
+        <div class="showcase-card">
+          <img src="SMACKVEST_SK1F.png" alt="Smack Rugby Vest Front"/>
+          <div class="showcase-card-label">Esports Jerseys</div>
+        </div>
+        <div class="showcase-card">
+          <img src="Volleyball_V_Neck_full_kit_1__1_.png" alt="Volleyball Kit"/>
+          <div class="showcase-card-label">Custom Vests</div>
+        </div>
+      </div>
+
+      <div class="product-options">
+        <div class="option-group">
+          <div class="option-label vests">Collars</div>
+          <div class="option-value">Round, Y-Neck, V-Neck, W-Neck, Half Polo</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label vests">Sleeve Styles</div>
+          <div class="option-value">Sleeveless, Short sleeves</div>
+        </div>
+        <div class="option-group">
+          <div class="option-label vests">Materials</div>
+          <div class="option-value">Soft Rice, Soft Derrick</div>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>S – XL</th>
+            <th>2XL – 4XL</th>
+            <th>XS – SL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="item-name">Training Vest Regular</span><span class="item-desc">Lightweight breathable training vest</span></td>
+            <td><span class="price-val">35,000</span></td>
+            <td><span class="price-val">40,000</span></td>
+            <td><span class="price-val">30,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Athletics Vest</span><span class="item-desc">Track and field athletic vest</span></td>
+            <td><span class="price-val">40,000</span></td>
+            <td><span class="price-val">45,000</span></td>
+            <td><span class="price-val">35,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Basketball Regular Shirt</span></td>
+            <td><span class="price-val">45,000</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">40,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Basketball Regular Short</span></td>
+            <td><span class="price-val">35,000</span></td>
+            <td><span class="price-val">40,000</span></td>
+            <td><span class="price-val">30,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Basketball Regular Kit</span><span class="item-desc">A vest and a pair of shorts</span></td>
+            <td><span class="price-val">75,000</span></td>
+            <td><span class="price-val">80,000</span></td>
+            <td><span class="price-val">65,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Netball Regular Kit</span><span class="item-desc">A vest and a skirt</span></td>
+            <td><span class="price-val">60,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Basketball Deluxe Kit</span><span class="item-desc">A vest, a pair of shorts and a pair of socks</span></td>
+            <td><span class="price-val">70,000</span></td>
+            <td><span class="price-val">75,000</span></td>
+            <td><span class="price-val">60,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="extras-strip">
+        <div class="extra-item"><strong>Embroidered Logo</strong> <span class="extra-price">+5,000</span> per jersey</div>
+        <div class="extra-item"><strong>DTF Logo</strong> <span class="extra-price">+10,000</span> per jersey</div>
+        <div class="extra-item"><strong>Vinyl Lettering</strong> <span class="extra-price">+15,000</span> per jersey</div>
+      </div>
+      <p class="currency-note">All prices in Ugandan Shillings (UGX)</p>
+    </div>
+
+    <!-- APPAREL -->
+    <div class="tab-panel" id="tab-apparel">
+      <div class="product-showcase">
+        <div class="showcase-card">
+          <img src="IMG-20241118-WA0023.jpg" alt="GWAZU Uganda Kit"/>
+          <div class="showcase-card-label">Cotton T-Shirts</div>
+        </div>
+        <div class="showcase-card">
+          <img src="IMG-20241118-WA0025.jpg" alt="GWAZU Uganda Kit – Detail"/>
+          <div class="showcase-card-label">V-Neck Apparel</div>
+        </div>
+        <div class="showcase-card">
+          <img src="HL7A5153.jpg" alt="GWAZU Brand Event"/>
+          <div class="showcase-card-label">Lifestyle Apparel</div>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>S – XL</th>
+            <th>2XL – 4XL</th>
+            <th>XS – SL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="item-name">Cotton T-Shirt</span><span class="item-desc">Breathable cotton, exercise or leisure. Round or V-Neck</span></td>
+            <td><span class="price-val">30,000</span></td>
+            <td><span class="price-val">35,000</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Cotton Hoodies / Sweaters</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">60,000</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Baseball Cap / Visors</span></td>
+            <td><span class="price-val">20,000</span></td>
+            <td><span class="price-na">—</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Headsocks</span></td>
+            <td><span class="price-val">20,000</span></td>
+            <td><span class="price-val">25,000</span></td>
+            <td><span class="price-val">20,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Baseball Jersey</span><span class="item-desc">An authentic baseball button-up jersey</span></td>
+            <td><span class="price-val">60,000</span></td>
+            <td><span class="price-val">65,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">American Football Jersey Replica</span><span class="item-desc">An authentic American football replica</span></td>
+            <td><span class="price-val">70,000</span></td>
+            <td><span class="price-val">75,000</span></td>
+            <td><span class="price-val">60,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Customized Ladies Gymwear</span><span class="item-desc">Cotton and lycra hybrid activewear, one and two-piece variants</span></td>
+            <td><span class="price-val">65,000</span></td>
+            <td><span class="price-val">70,000</span></td>
+            <td><span class="price-val">60,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Cotton Sweatpants</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">45,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Cotton Comfort Shorts</span></td>
+            <td><span class="price-val">45,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-na">—</span></td>
+          </tr>
+          <tr>
+            <td><span class="item-name">Management Team Polos</span><span class="item-desc">In cotton or jersey rice material</span></td>
+            <td><span class="price-val">50,000</span></td>
+            <td><span class="price-val">55,000</span></td>
+            <td><span class="price-val">45,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:32px; padding: 20px 24px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); font-family: 'Barlow Condensed', sans-serif; font-size:13px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color: var(--mid); text-align:center;">
+        More items coming soon
+      </div>
+      <p class="currency-note">All prices in Ugandan Shillings (UGX)</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ORDER -->
+<section id="order">
+  <div class="diag-accent"></div>
+  <div class="order-inner">
+    <div class="order-left reveal">
+      <div class="section-label">Place an Order</div>
+      <h2 class="section-title">LET'S<br>BUILD<br>YOUR KIT</h2>
+      <p class="order-desc">
+        Ready to create something? Reach out via WhatsApp or call us directly. We'll handle the design, production, and delivery — all the way to your door in Kampala.
+      </p>
+      <div class="order-perks">
+        <div class="perk">
+          <span class="perk-icon">FREE</span>
+          Free delivery within Greater Kampala Metropolitan Area
+        </div>
+        <div class="perk">
+          <span class="perk-icon">FAST</span>
+          14 business days for sportswear. 1–10 days for apparel.
+        </div>
+        <div class="perk">
+          <span class="perk-icon">ANY</span>
+          No minimum quantity. Single piece or full team kit — we do it.
+        </div>
+        <div class="perk">
+          <span class="perk-icon">PAY</span>
+          Flexible payment and design collaboration options available.
+        </div>
+      </div>
+    </div>
+
+    <div class="order-right reveal">
+      <div class="order-cards">
+        <a href="https://wa.me/256751464000" target="_blank" class="order-card">
+          <div class="order-card-icon">💬</div>
+          <div class="order-card-body">
+            <div class="order-card-title">WhatsApp — Kevin (CEO)</div>
+            <div class="order-card-sub">+256 751 464 000</div>
+          </div>
+          <div class="order-card-arrow">→</div>
+        </a>
+        <a href="https://wa.me/256779317949" target="_blank" class="order-card">
+          <div class="order-card-icon">💬</div>
+          <div class="order-card-body">
+            <div class="order-card-title">WhatsApp — Leone (COO)</div>
+            <div class="order-card-sub">+256 779 317 949</div>
+          </div>
+          <div class="order-card-arrow">→</div>
+        </a>
+        <a href="https://wa.me/256752262057" target="_blank" class="order-card">
+          <div class="order-card-icon">💬</div>
+          <div class="order-card-body">
+            <div class="order-card-title">WhatsApp — Mark (Sales)</div>
+            <div class="order-card-sub">+256 752 262 057</div>
+          </div>
+          <div class="order-card-arrow">→</div>
+        </a>
+      </div>
+
+      <div class="team-contacts">
+        <div class="team-title">Our Team</div>
+        <div class="team-member">
+          <div>
+            <div class="member-role">Chief Executive Officer</div>
+            <div class="member-name">Kevin Nalungu</div>
+          </div>
+          <a href="tel:+256751464000" class="member-phone">+256 751 464 000</a>
+        </div>
+        <div class="team-member">
+          <div>
+            <div class="member-role">COO &amp; CFO</div>
+            <div class="member-name">Leone George Okello</div>
+          </div>
+          <a href="tel:+256779317949" class="member-phone">+256 779 317 949</a>
+        </div>
+        <div class="team-member">
+          <div>
+            <div class="member-role">Head of Sales</div>
+            <div class="member-name">Mark Alvin Muhumuza</div>
+          </div>
+          <a href="tel:+256752262057" class="member-phone">+256 752 262 057</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">GWAZU</div>
+      <div class="footer-tagline">Create, Dominate</div>
+    </div>
+    <div class="footer-socials">
+      <a href="#" class="footer-social">Instagram</a>
+      <a href="#" class="footer-social">Facebook</a>
+      <a href="#" class="footer-social">X / Twitter</a>
+      <a href="#" class="footer-social">WhatsApp</a>
+    </div>
+    <div class="footer-copy">
+      © 2025 GWAZU Agency. Kampala, Uganda.
+    </div>
+  </div>
+</footer>
+
+<script>
+  function switchCat(cat) {
+    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.cat-card[data-cat="${cat}"]`).classList.add('active');
+    document.getElementById(`tab-${cat}`).classList.add('active');
+  }
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
