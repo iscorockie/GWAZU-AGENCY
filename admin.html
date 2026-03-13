@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GWAZU Admin — Photo Manager</title>
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+<style>
+  /* ── CONFIG ── Change ADMIN_PASSWORD in the script below to your own password */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #080808;
+    --surface: #111111;
+    --border:  rgba(255,255,255,0.07);
+    --white:   #ffffff;
+    --mid:     rgba(255,255,255,0.45);
+    --accent:  #c8ff00;
+    --danger:  #ff4444;
+    --radius:  12px;
+  }
+
+  body {
+    background: var(--bg); color: var(--white);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 32px;
+    padding: 24px;
+  }
+  .login-logo { width: 120px; opacity: 0.9; }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    width: 100%; max-width: 400px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .login-card h1 {
+    font-size: 20px; font-weight: 700;
+    letter-spacing: 1px; text-align: center;
+  }
+  .login-card p {
+    font-size: 13px; color: var(--mid);
+    text-align: center; line-height: 1.6;
+  }
+  .input-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .input-wrap label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); }
+  .input-wrap input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--white);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-wrap input:focus { border-color: var(--accent); }
+  .btn-login {
+    background: var(--accent); color: #000;
+    border: none; border-radius: 8px;
+    padding: 14px; font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .btn-login:hover { opacity: 0.85; }
+  .login-error {
+    background: rgba(255,68,68,0.1);
+    border: 1px solid rgba(255,68,68,0.3);
+    border-radius: 8px; padding: 12px;
+    font-size: 13px; color: var(--danger);
+    text-align: center; display: none;
+  }
+
+  /* ── DASHBOARD ── */
+  #dashboard { display: none; }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-logo { height: 36px; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-title {
+    font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--mid);
+  }
+  .btn-logout {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 16px;
+    color: var(--mid); font-size: 12px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+  .main { padding: 40px 32px; max-width: 1300px; margin: 0 auto; }
+
+  .dash-header { margin-bottom: 40px; }
+  .dash-header h2 {
+    font-size: 28px; font-weight: 800;
+    letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .dash-header p { color: var(--mid); font-size: 14px; line-height: 1.6; }
+
+  /* Setup banner */
+  #setup-banner {
+    background: rgba(200,255,0,0.06);
+    border: 1px solid rgba(200,255,0,0.2);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: none;
+  }
+  #setup-banner h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--accent); }
+  #setup-banner p { font-size: 13px; color: var(--mid); line-height: 1.8; }
+  #setup-banner code {
+    background: rgba(255,255,255,0.08); padding: 2px 8px;
+    border-radius: 4px; font-size: 12px; color: var(--accent);
+  }
+
+  /* Section cards */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .section-card:hover { border-color: rgba(255,255,255,0.15); }
+
+  .section-card-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-info { display: flex; align-items: center; gap: 12px; }
+  .section-emoji { font-size: 22px; }
+  .section-name { font-size: 15px; font-weight: 700; }
+  .section-tag {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--mid); margin-top: 2px;
+  }
+  .photo-count {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; color: var(--mid);
+  }
+
+  .section-card-body { padding: 20px 24px; }
+
+  /* Photo thumbnails */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+    min-height: 60px;
+  }
+  .thumb-wrap {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(255,255,255,0.04);
+  }
+  .thumb-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .thumb-delete {
+    position: absolute; top: 4px; right: 4px;
+    background: rgba(0,0,0,0.7);
+    border: none; border-radius: 50%;
+    width: 22px; height: 22px;
+    color: #fff; font-size: 12px;
+    cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .thumb-wrap:hover .thumb-delete { display: flex; }
+  .thumb-delete:hover { background: var(--danger); }
+
+  .thumb-empty {
+    grid-column: 1 / -1;
+    padding: 20px;
+    text-align: center;
+    color: var(--mid);
+    font-size: 13px;
+  }
+
+  .thumb-loading {
+    grid-column: 1 / -1;
+    padding: 20px;
+    text-align: center;
+    color: var(--mid);
+    font-size: 13px;
+  }
+
+  .btn-upload {
+    width: 100%;
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--white);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-upload:hover {
+    background: rgba(200,255,0,0.06);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-upload svg { width: 16px; height: 16px; }
+
+  /* Config panel */
+  .config-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 40px;
+  }
+  .config-section h3 {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .config-field { display: flex; flex-direction: column; gap: 8px; }
+  .config-field label {
+    font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--mid);
+  }
+  .config-field input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px;
+    color: var(--white); font-size: 14px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .config-field input:focus { border-color: var(--accent); }
+  .config-field input.saved { border-color: rgba(200,255,0,0.4); }
+  .btn-save-config {
+    background: var(--accent); color: #000;
+    border: none; border-radius: 8px;
+    padding: 12px 24px; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; cursor: pointer;
+    transition: opacity 0.2s; align-self: flex-end;
+  }
+  .btn-save-config:hover { opacity: 0.85; }
+
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block;
+  }
+  .status-dot.ok { background: var(--accent); }
+  .status-dot.error { background: var(--danger); }
+  .status-dot.idle { background: rgba(255,255,255,0.2); }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--accent); color: #000;
+    padding: 12px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s; z-index: 9999;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 600px) {
+    .main { padding: 24px 16px; }
+    .topbar { padding: 0 16px; }
+    .config-grid { grid-template-columns: 1fr; }
+    .sections-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <img src="Gwazu_Logo_1.png" class="login-logo" alt="GWAZU"/>
+  <div class="login-card">
+    <h1>ADMIN PANEL</h1>
+    <p>Sign in to manage photos across the GWAZU website.</p>
+    <div class="input-wrap">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter') doLogin()"/>
+    </div>
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+    <button class="btn-login" onclick="doLogin()">SIGN IN</button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+
+  <nav class="topbar">
+    <img src="Gwazu_Logo_1.png" class="topbar-logo" alt="GWAZU"/>
+    <div class="topbar-right">
+      <span class="topbar-title">Photo Manager</span>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <div class="dash-header">
+      <h2>PHOTO MANAGER</h2>
+      <p>Upload and manage photos for each section of the GWAZU website.<br>
+         Changes go live on the site automatically after upload.</p>
+    </div>
+
+    <!-- Cloudinary Config -->
+    <div class="config-section">
+      <h3>
+        <span class="status-dot idle" id="config-status"></span>
+        Cloudinary Settings
+      </h3>
+      <div class="config-grid">
+        <div class="config-field">
+          <label>Cloud Name</label>
+          <input type="text" id="cfg-cloud" placeholder="e.g. my-gwazu-cloud"
+                 oninput="saveConfig()"/>
+        </div>
+        <div class="config-field">
+          <label>Upload Preset</label>
+          <input type="text" id="cfg-preset" placeholder="e.g. gwazu_unsigned"
+                 oninput="saveConfig()"/>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--mid);margin-top:14px;line-height:1.8;">
+        Get these from your
+        <a href="https://cloudinary.com/console" target="_blank"
+           style="color:var(--accent);">Cloudinary Dashboard</a>.
+        Cloud Name is on the main page. Upload Preset: Settings → Upload → Add upload preset → set to <strong>Unsigned</strong>.
+        Also go to <strong>Settings → Security</strong> and <strong>uncheck "Resource list"</strong> so the site can read your photos.
+      </p>
+    </div>
+
+    <!-- Setup banner (shown if not configured) -->
+    <div id="setup-banner">
+      <h3>⚙️ One-time setup needed</h3>
+      <p>
+        Enter your <code>Cloud Name</code> and <code>Upload Preset</code> above before uploading.
+        You only need to do this once — the settings are saved in your browser.
+      </p>
+    </div>
+
+    <!-- Section Cards -->
+    <div class="sections-grid" id="sections-grid"></div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  ⚙️  CHANGE THIS PASSWORD
+// ═══════════════════════════════════════════════
+const ADMIN_PASSWORD = 'gwazu2025';
+
+// ── Section definitions ──────────────────────
+const SECTIONS = [
+  {
+    id: 'work',
+    name: 'Work / Gallery',
+    emoji: '🖼️',
+    tag: 'gwazu-work',
+    desc: 'Portfolio grid on the homepage',
+    max: 12
+  },
+  {
+    id: 'football',
+    name: 'Football Kits',
+    emoji: '⚽',
+    tag: 'gwazu-football',
+    desc: 'Photos shown in the Football product tab',
+    max: 6
+  },
+  {
+    id: 'rugby',
+    name: 'Rugby Kits',
+    emoji: '🏉',
+    tag: 'gwazu-rugby',
+    desc: 'Photos shown in the Rugby product tab',
+    max: 6
+  },
+  {
+    id: 'vests',
+    name: 'Vests',
+    emoji: '🦺',
+    tag: 'gwazu-vests',
+    desc: 'Photos shown in the Vests product tab',
+    max: 6
+  },
+  {
+    id: 'apparel',
+    name: 'Apparel',
+    emoji: '👕',
+    tag: 'gwazu-apparel',
+    desc: 'Photos shown in the Apparel tab',
+    max: 6
+  },
+  {
+    id: 'about',
+    name: 'About / Team',
+    emoji: '📸',
+    tag: 'gwazu-about',
+    desc: 'Team portraits in the About section',
+    max: 6
+  }
+];
+
+// ── Auth ─────────────────────────────────────
+function doLogin() {
+  const val = document.getElementById('pw-input').value;
+  const err = document.getElementById('login-error');
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    initDashboard();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function doLogout() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+
+// ── Config ───────────────────────────────────
+function loadConfig() {
+  return {
+    cloud:  localStorage.getItem('gwazu_cloud')  || '',
+    preset: localStorage.getItem('gwazu_preset') || ''
+  };
+}
+
+function saveConfig() {
+  const cloud  = document.getElementById('cfg-cloud').value.trim();
+  const preset = document.getElementById('cfg-preset').value.trim();
+  localStorage.setItem('gwazu_cloud',  cloud);
+  localStorage.setItem('gwazu_preset', preset);
+  updateConfigStatus();
+}
+
+function updateConfigStatus() {
+  const { cloud, preset } = loadConfig();
+  const dot = document.getElementById('config-status');
+  const banner = document.getElementById('setup-banner');
+  if (cloud && preset) {
+    dot.className = 'status-dot ok';
+    banner.style.display = 'none';
+    // reload all photo grids
+    SECTIONS.forEach(s => loadSectionPhotos(s));
+  } else {
+    dot.className = 'status-dot idle';
+    banner.style.display = 'block';
+  }
+}
+
+// ── Init dashboard ───────────────────────────
+function initDashboard() {
+  const { cloud, preset } = loadConfig();
+  if (cloud)  document.getElementById('cfg-cloud').value  = cloud;
+  if (preset) document.getElementById('cfg-preset').value = preset;
+  updateConfigStatus();
+  renderSectionCards();
+}
+
+// ── Render section cards ─────────────────────
+function renderSectionCards() {
+  const grid = document.getElementById('sections-grid');
+  grid.innerHTML = SECTIONS.map(s => `
+    <div class="section-card" id="card-${s.id}">
+      <div class="section-card-head">
+        <div class="section-info">
+          <span class="section-emoji">${s.emoji}</span>
+          <div>
+            <div class="section-name">${s.name}</div>
+            <div class="section-tag">${s.tag}</div>
+          </div>
+        </div>
+        <span class="photo-count" id="count-${s.id}">— photos</span>
+      </div>
+      <div class="section-card-body">
+        <div class="photo-grid" id="grid-${s.id}">
+          <div class="thumb-loading">Loading…</div>
+        </div>
+        <button class="btn-upload" onclick="openUpload('${s.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Upload Photos
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  const { cloud } = loadConfig();
+  if (cloud) SECTIONS.forEach(s => loadSectionPhotos(s));
+}
+
+// ── Load photos from Cloudinary ──────────────
+async function loadSectionPhotos(section) {
+  const { cloud } = loadConfig();
+  if (!cloud) return;
+
+  const grid = document.getElementById(`grid-${section.id}`);
+  const count = document.getElementById(`count-${section.id}`);
+  grid.innerHTML = '<div class="thumb-loading">Loading…</div>';
+
+  try {
+    const res = await fetch(
+      `https://res.cloudinary.com/${cloud}/image/list/${section.tag}.json`
+    );
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    const resources = data.resources || [];
+
+    count.textContent = `${resources.length} photo${resources.length !== 1 ? 's' : ''}`;
+
+    if (resources.length === 0) {
+      grid.innerHTML = `<div class="thumb-empty">No photos yet. Upload some below.</div>`;
+      return;
+    }
+
+    grid.innerHTML = resources.map(r => {
+      const url = `https://res.cloudinary.com/${cloud}/image/upload/w_200,h_200,c_fill/${r.public_id}.jpg`;
+      return `
+        <div class="thumb-wrap">
+          <img src="${url}" loading="lazy"/>
+          <button class="thumb-delete" onclick="deletePhoto('${section.id}','${r.public_id}')" title="Remove">✕</button>
+        </div>
+      `;
+    }).join('');
+
+  } catch(e) {
+    grid.innerHTML = `<div class="thumb-empty" style="color:rgba(255,100,100,0.7)">
+      Could not load photos. Make sure your Cloud Name is correct and<br>
+      <strong>"Resource list"</strong> is unchecked in Cloudinary Security settings.
+    </div>`;
+    count.textContent = '— photos';
+  }
+}
+
+// ── Upload widget ────────────────────────────
+function openUpload(sectionId) {
+  const { cloud, preset } = loadConfig();
+  if (!cloud || !preset) {
+    showToast('⚠️ Enter Cloud Name and Upload Preset first');
+    document.getElementById('cfg-cloud').focus();
+    return;
+  }
+
+  const section = SECTIONS.find(s => s.id === sectionId);
+
+  const widget = cloudinary.createUploadWidget({
+    cloudName: cloud,
+    uploadPreset: preset,
+    tags: [section.tag],
+    sources: ['local', 'camera', 'url'],
+    multiple: true,
+    maxFiles: section.max,
+    clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
+    maxFileSize: 10000000, // 10MB
+    cropping: false,
+    showPoweredBy: false,
+    styles: {
+      palette: {
+        window: '#111111',
+        windowBorder: '#333333',
+        tabIcon: '#c8ff00',
+        menuIcons: '#cccccc',
+        textDark: '#ffffff',
+        textLight: '#aaaaaa',
+        link: '#c8ff00',
+        action: '#c8ff00',
+        inactiveTabIcon: '#666666',
+        error: '#ff4444',
+        inProgress: '#c8ff00',
+        complete: '#c8ff00',
+        sourceBg: '#1a1a1a'
+      },
+      fonts: { default: null }
+    }
+  }, (error, result) => {
+    if (!error && result && result.event === 'success') {
+      showToast(`✓ Photo uploaded to ${section.name}`);
+    }
+    if (!error && result && result.event === 'queue-end') {
+      setTimeout(() => loadSectionPhotos(section), 1500);
+    }
+  });
+
+  widget.open();
+}
+
+// ── Delete photo (requires Admin API — shows instruction) ──
+function deletePhoto(sectionId, publicId) {
+  const section = SECTIONS.find(s => s.id === sectionId);
+  if (confirm(`Remove this photo from ${section.name}?\n\nNote: This removes it from the website display. To permanently delete it from storage, also remove it in your Cloudinary Media Library.`)) {
+    // Cloudinary deletion requires a server-side call with API secret.
+    // For now we guide the user to Cloudinary Media Library.
+    showToast('Go to Cloudinary → Media Library to permanently delete');
+    setTimeout(() => {
+      window.open(`https://cloudinary.com/console/media_library/search?q=${encodeURIComponent(publicId)}`, '_blank');
+    }, 800);
+  }
+}
+
+// ── Toast ────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
